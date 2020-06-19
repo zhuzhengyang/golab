@@ -15,13 +15,7 @@ type plugin struct{}
 
 // Init sets up the plugin
 func (p *plugin) Init(c *Config) error {
-	switch c.Type {
-	case "patch":
-		c.NewFunc.(func())()
-	default:
-		return fmt.Errorf("Unknown plugin type: %s for %s", c.Type, c.Name)
-	}
-
+	c.NewFunc.(func())()
 	return nil
 }
 
@@ -61,8 +55,13 @@ func (p *plugin) Generate(path string, c *Config) error {
 func (p *plugin) Build(path string, c *Config) error {
 	path = strings.TrimSuffix(path, ".so")
 
-	// create go file in tmp path
-	temp := os.TempDir()
+	// create go file in current path
+	os.UserConfigDir()
+	temp, err := os.Getwd()
+	if err != nil {
+		return err
+	}
+	temp = filepath.Join(temp, "tmp")
 	base := filepath.Base(path)
 	goFile := filepath.Join(temp, base+".go")
 
@@ -72,11 +71,11 @@ func (p *plugin) Build(path string, c *Config) error {
 		return err
 	}
 	// remove .go file
-	defer os.Remove(goFile)
+	// defer os.Remove(goFile)
 
 	if err := os.MkdirAll(filepath.Dir(path), 0755); err != nil && !os.IsExist(err) {
 		return fmt.Errorf("Failed to create dir %s: %v", filepath.Dir(path), err)
 	}
-	cmd := exec.Command("go", "build", "-buildmode=plugin", "-o", path+".so", goFile)
+	cmd := exec.Command("go", "build", "-buildmode=plugin", "-gcflags=-l", "-o", path+".so", goFile)
 	return cmd.Run()
 }

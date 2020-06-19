@@ -1,17 +1,16 @@
 package main
 
 import (
-	"github.com/timestee/golab/hotfix/sample/player"
-	"github.com/timestee/golab/hotfix/sample/plugin"
+	"hotfix/player"
+	"hotfix/plugin"
 )
 
 func main() {
 	p := plugin.NewPlugin()
 	err := p.Build("/tmp/patch.so", &plugin.Config{
-		Name:    "patch",
-		Type:    "patch",
-		Path:    "github.com/timestee/golab/hotfix/sample/patch",
-		NewFunc: "Patch",
+		Name:       "patch",
+		ImportPath: "hotfix/patch",
+		NewFunc:    "Patch",
 	})
 
 	if err != nil {

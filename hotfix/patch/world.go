@@ -5,12 +5,12 @@ import (
 	"reflect"
 	_ "unsafe"
 
-	"github.com/timestee/golab/hotfix/sample/player"
+	"hotfix/player"
 
-	"bou.ke/monkey"
+	"github.com/agiledragon/gomonkey"
 )
 
-//go:linkname  setName github.com/timestee/golab/hotfix/sample/player.(*Player).setName
+//go:linkname  setName hotfix/player.(*Player).setName
 func setName(r *player.Player, n string) error
 
 func FixWorld(r *player.Player) {
@@ -21,5 +21,5 @@ func FixWorld(r *player.Player) {
 func Patch() {
 	var d *player.Player
 	fmt.Println("patch exec")
-	monkey.PatchInstanceMethod(reflect.TypeOf(d), "World", FixWorld)
+	gomonkey.ApplyMethod(reflect.TypeOf(d), "World", FixWorld)
 }

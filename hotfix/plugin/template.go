@@ -1,16 +1,15 @@
 package plugin
 
 var (
-	tmpl = `
-package main
+	tmpl = `package main
+
 import (
-	"github.com/timestee/golab/hotfix/sample/plugin"
-	"{{.Path}}"
+	"hotfix/plugin"
+	"{{.ImportPath}}"
 )
 var Plugin = plugin.Config{
 	Name: "{{.Name}}",
-	Type: "{{.Type}}",
-	Path: "{{.Path}}",
+	ImportPath: "{{.ImportPath}}",
 	NewFunc: {{.Name}}.{{.NewFunc}},
 }
 `

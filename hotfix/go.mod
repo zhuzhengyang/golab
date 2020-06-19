@@ -1,7 +1,5 @@
-module github.com/timestee/golab/hotfix/sample
+module hotfix
 
 go 1.14
 
-require (
-	bou.ke/monkey v1.0.2
-)
+require github.com/agiledragon/gomonkey v2.0.1+incompatible

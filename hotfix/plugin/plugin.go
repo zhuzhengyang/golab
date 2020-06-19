@@ -14,10 +14,8 @@ type Plugin interface {
 type Config struct {
 	// Name of the plugin e.g rabbitmq
 	Name string
-	// Type of the plugin e.g broker
-	Type string
-	// Path specifies the import path
-	Path string
+	// ImportPath specifies the import path
+	ImportPath string
 	// NewFunc creates an instance of the plugin
 	NewFunc interface{}
 }
