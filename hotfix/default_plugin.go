@@ -1,14 +1,12 @@
-package plugin
+package hotfix
 
 import (
 	"errors"
 	"fmt"
-	"github.com/zhuzhengyang/golab/hotfix/conf"
 	"os"
 	"os/exec"
 	"path/filepath"
 	pg "plugin"
-	"strings"
 	"text/template"
 )
 
@@ -21,7 +19,8 @@ func (p *plugin) Init(c *Config) error {
 }
 
 // Load loads a plugin created with `go build -buildmode=plugin`
-func (p *plugin) Load(path string) (*Config, error) {
+func (p *plugin) Load(name string) (*Config, error) {
+	path := filepath.Join(GetPluginPath(), name+".so")
 	plugin, err := pg.Open(path)
 	if err != nil {
 		return nil, err
@@ -39,13 +38,13 @@ func (p *plugin) Load(path string) (*Config, error) {
 
 // Generate creates a go file at the specified path.
 // You must use `go build -buildmode=plugin`to build it.
-func (p *plugin) Generate(path string, c *Config) error {
+func (p *plugin) Generate(path string, name string, c *Config) error {
 	f, err := os.Create(path)
 	if err != nil {
 		return err
 	}
 	defer f.Close()
-	t, err := template.New(c.Name).Parse(tmpl)
+	t, err := template.New(name).Parse(tmpl)
 	if err != nil {
 		return err
 	}
@@ -53,15 +52,14 @@ func (p *plugin) Generate(path string, c *Config) error {
 }
 
 // Build generates a dso plugin using the go command `go build -buildmode=plugin`
-func (p *plugin) Build(path string, c *Config) error {
-	path = strings.TrimSuffix(path, ".so")
+func (p *plugin) Build(name string, c *Config) error {
+	path := filepath.Join(GetPluginPath(), name)
 
 	// create go file in current path
-	base := filepath.Base(path)
-	goFile := filepath.Join(conf.PluginPath, base+".go")
+	goFile := filepath.Join(GetPluginPath(), name+".go")
 
 	// generate .go file
-	if err := p.Generate(goFile, c); err != nil {
+	if err := p.Generate(goFile, name, c); err != nil {
 		return err
 	}
 	// remove .go file
