@@ -13,7 +13,7 @@ func main() {
 
 	pp := &player.Player{}
 	c := time.Tick(1 * time.Second)
-	for _ = range c {
+	for range c {
 		pp.GetName()
 	}
 }

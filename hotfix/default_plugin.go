@@ -12,15 +12,15 @@ import (
 
 type plugin struct{}
 
-// Init sets up the plugin
+// runNewFunc sets up the plugin
 func (p *plugin) Init(c *Config) error {
 	c.NewFunc.(func())()
 	return nil
 }
 
-// Load loads a plugin created with `go build -buildmode=plugin`
+// load loads a plugin created with `go build -buildmode=plugin`
 func (p *plugin) Load(name string) (*Config, error) {
-	path := filepath.Join(GetPluginPath(), name+".so")
+	path := filepath.Join(getPluginPath(), name+".so")
 	plugin, err := pg.Open(path)
 	if err != nil {
 		return nil, err
@@ -53,10 +53,10 @@ func (p *plugin) Generate(path string, name string, c *Config) error {
 
 // Build generates a dso plugin using the go command `go build -buildmode=plugin`
 func (p *plugin) Build(name string, c *Config) error {
-	path := filepath.Join(GetPluginPath(), name)
+	path := filepath.Join(getPluginPath(), name)
 
 	// create go file in current path
-	goFile := filepath.Join(GetPluginPath(), name+".go")
+	goFile := filepath.Join(getPluginPath(), name+".go")
 
 	// generate .go file
 	if err := p.Generate(goFile, name, c); err != nil {

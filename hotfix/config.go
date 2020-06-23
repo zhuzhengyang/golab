@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 )
 
-// plugin go files and so files location
+// plugin go files and so files location.
 // default: os.Getwd() + "/tmp"
 var pluginPath string
 
@@ -17,10 +17,11 @@ func init() {
 	pluginPath = filepath.Join(temp, "tmp")
 }
 
+// Set the install path of plugins as you want
 func SetPluginPath(path string) {
 	pluginPath = path
 }
 
-func GetPluginPath() string {
+func getPluginPath() string {
 	return pluginPath
 }

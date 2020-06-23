@@ -2,10 +2,12 @@ package player
 
 import "fmt"
 
+// Test Struct
 type Player struct {
 	Name string
 }
 
+// Print Name
 func (r *Player) GetName() {
 	r.setName("alice")
 	fmt.Println("before patch ", r.Name)

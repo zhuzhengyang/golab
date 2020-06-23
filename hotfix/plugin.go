@@ -13,14 +13,16 @@ var (
 	defaultPlugin = &plugin{}
 )
 
-func Build(path string, c *Config) error {
-	return defaultPlugin.Build(path, c)
+// Generate a plugin file in pluginPath.
+// name: the name of .so file.
+func Build(name string, c *Config) error {
+	return defaultPlugin.Build(name, c)
 }
 
-func Load(name string) (*Config, error) {
+func load(name string) (*Config, error) {
 	return defaultPlugin.Load(name)
 }
 
-func Init(c *Config) error {
+func runNewFunc(c *Config) error {
 	return defaultPlugin.Init(c)
 }

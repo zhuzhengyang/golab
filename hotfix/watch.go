@@ -14,9 +14,9 @@ import (
 var watcher *fsnotify.Watcher
 var patchMap sync.Map
 
-// watch pluginPath, autoload plugins to replace origin function
-// dir: watch directory of plugin files
-// if dir is empty, use default value: os.Getwd() + "/tmp"
+// watch pluginPath, autoload plugins to replace origin function.
+// dir: watch directory of plugin files.
+// if dir is empty, use default value: os.Getwd() + "/tmp".
 func Watch(dir string) {
 	if dir != "" {
 		SetPluginPath(dir)
@@ -41,12 +41,12 @@ func Watch(dir string) {
 				switch event.Op {
 				case fsnotify.Write, fsnotify.Create:
 					log.Println(event.String())
-					c, err := Load(getPluginName(event.Name))
+					c, err := load(getPluginName(event.Name))
 					if err != nil {
 						log.Println("plugin load error", err)
 						continue
 					}
-					err = Init(c)
+					err = runNewFunc(c)
 					if err != nil {
 						log.Println("plugin init error", err)
 						continue
@@ -77,6 +77,7 @@ func Watch(dir string) {
 	log.Printf("start watch %s\n", pluginPath)
 }
 
+// close *fsnotify.Watcher
 func StopWatch() {
 	if watcher != nil {
 		watcher.Close()
