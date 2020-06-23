@@ -3,6 +3,7 @@ package plugin
 import (
 	"errors"
 	"fmt"
+	"github.com/zhuzhengyang/golab/hotfix/conf"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -56,16 +57,9 @@ func (p *plugin) Build(path string, c *Config) error {
 	path = strings.TrimSuffix(path, ".so")
 
 	// create go file in current path
-	os.UserConfigDir()
-	temp, err := os.Getwd()
-	if err != nil {
-		return err
-	}
-	temp = filepath.Join(temp, "tmp")
 	base := filepath.Base(path)
-	goFile := filepath.Join(temp, base+".go")
+	goFile := filepath.Join(conf.PluginPath, base+".go")
 
-	fmt.Println(goFile)
 	// generate .go file
 	if err := p.Generate(goFile, c); err != nil {
 		return err

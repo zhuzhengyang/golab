@@ -5,12 +5,12 @@ import (
 	"reflect"
 	_ "unsafe"
 
-	"hotfix/player"
+	"github.com/zhuzhengyang/golab/hotfix/example/player"
 
 	"github.com/agiledragon/gomonkey"
 )
 
-//go:linkname  setName hotfix/player.(*Player).setName
+//go:linkname  setName github.com/zhuzhengyang/golab/hotfix/example/player.(*Player).setName
 func setName(r *player.Player, n string) error
 
 func FixWorld(r *player.Player) {

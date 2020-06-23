@@ -4,7 +4,7 @@ var (
 	tmpl = `package main
 
 import (
-	"hotfix/plugin"
+	"github.com/zhuzhengyang/golab/hotfix/plugin"
 	"{{.ImportPath}}"
 )
 var Plugin = plugin.Config{
