@@ -5,6 +5,8 @@ pid=$!
 echo $pid
 sleep 3
 go run -gcflags=-l generate_plugin.go
+mv ./example_patch.so ./tmp/
+rm ./example_patch.go
 sleep 3
 rm tmp/example_patch.so
 sleep 3

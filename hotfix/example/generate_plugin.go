@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	// hotfix.SetPluginPath()
+	hotfix.SetPluginPath("./")
 	err := hotfix.Build(patch.PluginName, &hotfix.Config{
 		ImportPath: "github.com/zhuzhengyang/golab/hotfix/example/patch",
 		NewFunc:    "patch.PatchPlayerWorld",
