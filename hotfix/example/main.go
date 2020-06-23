@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	hotfix.Watch("")
+	hotfix.Watch("", true)
 	defer hotfix.StopWatch()
 
 	pp := &player.Player{}

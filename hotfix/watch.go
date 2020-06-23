@@ -2,6 +2,7 @@ package hotfix
 
 import (
 	"log"
+	"os"
 	"path/filepath"
 	"strings"
 	"sync"
@@ -15,12 +16,19 @@ var watcher *fsnotify.Watcher
 var patchMap sync.Map
 
 // watch pluginPath, autoload plugins to replace origin function.
+//
 // dir: watch directory of plugin files.
 // if dir is empty, use default value: os.Getwd() + "/tmp".
-func Watch(dir string) {
+//
+// if loadAll is true, will load and run all existing plugins under dir before start watching
+func Watch(dir string, loadAll bool) {
 	if dir != "" {
 		SetPluginPath(dir)
 	}
+	if loadAll {
+		loadALlPlugins()
+	}
+
 	var err error
 	watcher, err = fsnotify.NewWatcher()
 	if err != nil {
@@ -91,4 +99,24 @@ func RegisterPatch(name string, patch *gomonkey.Patches) {
 func getPluginName(eventName string) string {
 	patchName := filepath.Base(eventName)
 	return patchName[:len(patchName)-3]
+}
+
+func loadALlPlugins() {
+	_ = filepath.Walk(pluginPath, func(path string, info os.FileInfo, err error) error {
+		if !strings.HasSuffix(path, ".so") {
+			return nil
+		}
+		log.Println("watch load ", path)
+		c, err := load(getPluginName(path))
+		if err != nil {
+			log.Println("plugin load error", err)
+			return nil
+		}
+		err = runNewFunc(c)
+		if err != nil {
+			log.Println("plugin init error", err)
+			return nil
+		}
+		return nil
+	})
 }
